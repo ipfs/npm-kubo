@@ -1,6 +1,6 @@
 # install go-ipfs from npm
 
-Install the latest go-ipfs binary.
+Install the latest [go-ipfs](https://github.com/ipfs/go-ipfs) binary.
 
 ```
 npm install -g go-ipfs
