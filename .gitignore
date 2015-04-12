@@ -1,2 +1,3 @@
 dist
+!dist/ipfs/ipfs
 node_modules
