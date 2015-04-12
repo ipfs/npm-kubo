@@ -1,0 +1,32 @@
+{
+  "name": "go-ipfs",
+  "version": "0.2.4",
+  "description": "Install the latest go-ipfs binary",
+  "main": "index.js",
+  "scripts": {
+    "install": "node install.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "ipfs": "dist/ipfs/ipfs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jbenet/node-go-ipfs.git"
+  },
+  "dependencies": {
+    "extract-zip": "^1.0.3",
+    "mkdirp": "^0.5.0",
+    "nugget": "^1.2.0"
+  },
+  "keywords": [
+    "ipfs",
+    "install"
+  ],
+  "author": "Juan Benet <juan@benet.ai> (http://juan.benet.ai/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jbenet/node-go-ipfs/issues"
+  },
+  "homepage": "https://github.com/jbenet/node-go-ipfs"
+}
