@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "extract-zip": "^1.0.3",
+    "go-platform": "^1.0.0",
     "mkdirp": "^0.5.0",
     "nugget": "^1.2.0"
   },
