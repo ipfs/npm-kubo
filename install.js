@@ -16,8 +16,6 @@ var bin = path.join(__dirname, 'bin')
 var tmp = path.join(__dirname, 'tmp')
 var installPath = path.join(bin, 'ipfs')
 
-if (!argv) throw new Error('Unknown platform: ' + platform)
-
 mkdirp(tmp, function(err) {
   if (err) onerror(err)
 
