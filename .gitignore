@@ -1,3 +1,2 @@
-dist
-!dist/ipfs/ipfs
+tmp
 node_modules

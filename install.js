@@ -12,23 +12,24 @@ checkPlatform(goenv) // make sure we can do this.
 var filename = 'ipfs_master_' + goenv.GOOS + '-' + goenv.GOARCH + '.zip'
 var url = 'https://gobuilder.me/get/github.com/ipfs/go-ipfs/cmd/ipfs/' + filename
 
-var dist = path.join(__dirname, 'dist')
-var installPath = path.join(dist, 'ipfs, ipfs')
-var shebang = '#!/bin/sh\n'
-var argv = '$@'
-var script = shebang + installPath + ' ' + argv + '\n'
-
+var bin = path.join(__dirname, 'bin')
+var tmp = path.join(__dirname, 'tmp')
+var installPath = path.join(bin, 'ipfs')
 
 if (!argv) throw new Error('Unknown platform: ' + platform)
 
-mkdirp(dist, function(err) {
+mkdirp(tmp, function(err) {
   if (err) onerror(err)
 
-  nugget(url, {target: filename, dir: dist, resume: true, verbose: true}, function (err) {
+  nugget(url, {target: filename, dir: tmp, resume: true, verbose: true}, function (err) {
     if (err) return onerror(err)
 
-    extract(path.join(dist, filename), {dir: dist}, function (err) {
+    extract(path.join(tmp, filename), {dir: tmp}, function (err) {
       if (err) return onerror(err)
+
+      fs.rename(path.join(tmp, "ipfs", "ipfs"), installPath, function(err) {
+        if (err) return onerror(err)
+      })
     })
   })
 })
