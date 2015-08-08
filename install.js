@@ -10,6 +10,9 @@ var version = require('./package.json').version
 
 checkPlatform(goenv) // make sure we can do this.
 
+// hacky hack hack to work around unpublishability
+version = version.replace(/-[0-9]+/, "")
+
 var filename = 'ipfs_v'+ version +'_' + goenv.GOOS + '-' + goenv.GOARCH + '.zip'
 var url = 'https://gobuilder.me/get/github.com/ipfs/go-ipfs/cmd/ipfs/' + filename
 
