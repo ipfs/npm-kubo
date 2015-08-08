@@ -2,7 +2,7 @@
 // portable file size
 if (process.argv.length != 3) {
   process.stdout.write("usage: ./filesize.js <path>\n")
-  process.stdout.write("return filesize of <path> (porably!)\n")
+  process.stdout.write("return filesize of <path> (portably!)\n")
   process.exit(0)
 }
 

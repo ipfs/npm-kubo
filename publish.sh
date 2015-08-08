@@ -25,14 +25,11 @@ if [ "$binsize" -gt "4096" ]; then
 did you change bin/ipfs? try: git checkout bin/ipfs"
 fi
 
-# ok, publishing now.
+echo "--> updating versions in repo"
+./update.js "$version"
 
-echo "--> updating version in package.json"
-json -I -f package.json -e "this.version='$version'"
-
-# publish to github + npm
 echo "\n--> publishing to git/github"
-git add package.json
+git add README.md package.json
 git commit -m "v$version"
 git push origin master
 
