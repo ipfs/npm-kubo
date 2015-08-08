@@ -6,10 +6,11 @@ var mkdirp = require('mkdirp');
 var nugget = require('nugget')
 var goenv = require('go-platform')
 var extract = require('extract-zip')
+var version = require('package.json').version
 
 checkPlatform(goenv) // make sure we can do this.
 
-var filename = 'ipfs_master_' + goenv.GOOS + '-' + goenv.GOARCH + '.zip'
+var filename = 'ipfs_v'+ version +'_' + goenv.GOOS + '-' + goenv.GOARCH + '.zip'
 var url = 'https://gobuilder.me/get/github.com/ipfs/go-ipfs/cmd/ipfs/' + filename
 
 var bin = path.join(__dirname, 'bin')
