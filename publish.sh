@@ -27,11 +27,14 @@ fi
 
 # ok, publishing now.
 
-# update version in package.json
+echo "--> updating version in package.json"
 json -I -f package.json -e "this.version='$version'"
 
 # publish to github + npm
+echo "\n--> publishing to git/github"
 git add package.json
 git commit -m "v$version"
 git push origin master
+
+echo "\n--> publishing go-ipfs@$version to npm"
 npm publish
