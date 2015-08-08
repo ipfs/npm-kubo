@@ -61,7 +61,7 @@ function checkPlatform(goenv) {
 
   switch (goenv.GOARCH) {
   case "amd64":
-  case "i386":
+  case "386":
   case "arm":
     break
 
