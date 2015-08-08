@@ -25,3 +25,7 @@ See [IPFS getting-started](http://ipfs.io/docs/getting-started). If anything goe
 
 Warning: this module uses the _latest_ version of ipfs. If there is a strong need to vendor an older version, let us know. We care about versions very much :(  but for a number of reasons, this is easier for us all right now.
 
+
+## Development
+
+**Warning**: the file `bin/ipfs` is a placeholder, when downloading stuff, it gets replaced. so if you run `node install.js` it will then be dirty in the git repo. **Do not commit this file**, as then you would be commiting a big binary and publishing it to npm. (**TODO: add a pre-commit or pre-publish hook that warns about this**)

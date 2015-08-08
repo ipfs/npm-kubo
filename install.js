@@ -6,7 +6,7 @@ var mkdirp = require('mkdirp');
 var nugget = require('nugget')
 var goenv = require('go-platform')
 var extract = require('extract-zip')
-var version = require('package.json').version
+var version = require('./package.json').version
 
 checkPlatform(goenv) // make sure we can do this.
 
@@ -16,25 +16,36 @@ var url = 'https://gobuilder.me/get/github.com/ipfs/go-ipfs/cmd/ipfs/' + filenam
 var bin = path.join(__dirname, 'bin')
 var tmp = path.join(__dirname, 'tmp')
 var installPath = path.join(bin, 'ipfs')
+var zipfile = path.join(tmp, filename)
 
+// mk tmp dir
 mkdirp(tmp, function(err) {
   if (err) onerror(err)
 
+  // download binary
   nugget(url, {target: filename, dir: tmp, resume: true, verbose: true}, function (err) {
     if (err) return onerror(err)
 
-    extract(path.join(tmp, filename), {dir: tmp}, function (err) {
+    // extract zip
+    extract(zipfile, {dir: tmp}, function (err) {
       if (err) return onerror(err)
 
+      // move ipfs binary into place.
       fs.rename(path.join(tmp, "ipfs", "ipfs"), installPath, function(err) {
         if (err) return onerror(err)
+
+        // remove zip from disk
+        fs.unlink(zipfile, function(err) {
+          if (err) return onerror(err)
+
+        })
       })
     })
   })
 })
 
 function onerror (err) {
-  throw err
+  if (err) throw err
 }
 
 function checkPlatform(goenv) {
