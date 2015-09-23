@@ -18,9 +18,7 @@
     "extract-zip": "^1.0.3",
     "go-platform": "^1.0.0",
     "mkdirp": "^0.5.0",
-    "nugget": "^1.2.0",
-    "tap-spec": "^4.1.0",
-    "tape": "^4.2.0"
+    "nugget": "^1.2.0"
   },
   "keywords": [
     "ipfs",
@@ -32,5 +30,8 @@
     "url": "https://github.com/ipfs/npm-go-ipfs/issues"
   },
   "homepage": "https://github.com/ipfs/npm-go-ipfs",
-  "devDependencies": {}
+  "devDependencies": {
+    "tap-spec": "^4.1.0",
+    "tape": "^4.2.0"
+  }
 }
