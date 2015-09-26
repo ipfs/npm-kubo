@@ -7,6 +7,7 @@ var nugget = require('nugget')
 var goenv = require('go-platform')
 var extract = require('extract-zip')
 var version = require('./package.json').version
+var ipfs = require('./')
 
 checkPlatform(goenv) // make sure we can do this.
 
@@ -16,7 +17,7 @@ version = version.replace(/-[0-9]+/, "")
 var filename = 'ipfs_v'+ version +'_' + goenv.GOOS + '-' + goenv.GOARCH + '.zip'
 var url = 'https://gobuilder.me/get/github.com/ipfs/go-ipfs/cmd/ipfs/' + filename
 
-var bin = path.join(__dirname, 'bin')
+var bin = path.dirname(ipfs)
 var tmp = path.join(__dirname, 'tmp')
 var installPath = path.join(bin, 'ipfs')
 var zipfile = path.join(tmp, filename)
