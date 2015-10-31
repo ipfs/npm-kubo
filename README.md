@@ -16,11 +16,11 @@ Installs from [https://gobuilder.me/github.com/ipfs/go-ipfs/cmd/ipfs](https://go
 ```sh
 > npm install -g go-ipfs
 > ipfs version
-ipfs version 0.3.7
+ipfs version 0.3.8
 
 > npm install go-ipfs
 > node_modules/.bin/ipfs
-ipfs version 0.3.7
+ipfs version 0.3.8
 ```
 
 See [IPFS getting-started](http://ipfs.io/docs/getting-started). If anything goes wrong, try using: [http://ipfs.io/docs/install](http://ipfs.io/docs/install).
