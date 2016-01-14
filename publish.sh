@@ -20,6 +20,7 @@ git ls-remote -t $repo | egrep "refs/tags/v$version$" >/dev/null 2>&1 ||
   die "$version not a tag in $repo"
 
 # check the bin/ipfs file is less than one MB.
+echo "--> check the bin/ipfs size"
 binsize=$(./filesize.js bin/ipfs)
 if [ "$binsize" -gt "4096" ]; then
   die "bin directory larger than expected.
