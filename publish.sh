@@ -15,6 +15,7 @@ die() {
 
 # check the version is indeed a tag in go-ipfs
 repo="https://github.com/ipfs/go-ipfs"
+echo "--> checking version is tag in $repo"
 git ls-remote -t $repo | egrep "refs/tags/v$version$" >/dev/null 2>&1 ||
   die "$version not a tag in $repo"
 
