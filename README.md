@@ -31,3 +31,26 @@ Warning: this module uses the _latest_ version of ipfs. If there is a strong nee
 ## Development
 
 **Warning**: the file `bin/ipfs` is a placeholder, when downloading stuff, it gets replaced. so if you run `node install.js` it will then be dirty in the git repo. **Do not commit this file**, as then you would be commiting a big binary and publishing it to npm. (**TODO: add a pre-commit or pre-publish hook that warns about this**)
+
+### Publish a new version
+
+You should be able to just run `./publish.sh` for example:
+
+```sh
+> ./publish.sh
+usage ./publish.sh <version>
+publish a version of go-ipfs to npm
+
+> ./publish.sh 0.3.11
+```
+
+This will:
+
+- check the version is indeed a tag in https://github.com/ipfs/go-ipfs
+- check the size of `bin/ipfs` is right (must be the checked in file)
+- update the version numbers in `package.json` and `README.md`
+- `git commit` the changes
+- push to https://github.com/ipfs/npm-go-ipfs
+- publish to `go-ipfs@$version` to https://npmjs.com/package/go-ipfs
+
+Open an issue in the repo if you run into trouble.
