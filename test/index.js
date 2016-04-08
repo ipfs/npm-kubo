@@ -1,16 +1,14 @@
 var test = require('tape')
 var fs = require('fs')
-var cp = require('child_process')
-var ipfs = require('../')
+var download = require('../src')
+var path = require('path')
 
-test('ensure ipfs bin path exists', function(t) {
-  t.plan(4)
-  fs.stat(ipfs, function(err, stats) {
-    t.error(err, 'ipfs bin should stat witout error')
-    cp.exec([ipfs,'version'].join(' '), function(err, stdout, stderr) {
-      t.error(err, 'ipfs runs without error')
-      t.true(stdout.indexOf('ipfs version') >= 0, 'ipfs version retreived')
-      t.false(stderr, 'no stderr output')
+test('Ensure ipfs gets downloaded', function (t) {
+  t.plan(2)
+  download(function () {
+    fs.stat(path.resolve(__dirname, '../go-ipfs'), function (err, stats) {
+      t.error(err, 'ipfs bin should stat without error')
+      t.ok(stats, 'ipfs was downloaded')
     })
   })
 })

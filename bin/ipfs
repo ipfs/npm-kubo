@@ -1,5 +1,0 @@
-#!/bin/sh
-echo "something went wrong installing ipfs."
-echo "this file should've been overwritten"
-echo "try again?"
-exit 1
