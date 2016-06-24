@@ -1,6 +1,23 @@
-# install go-ipfs from npm
+# npm-go-ipfs
 
-[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io) [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/) [![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs) [![Dependency Status](https://david-dm.org/ipfs/npm-go-ipfs.svg?style=flat-square)](https://david-dm.org/ipfs/npm-go-ipfs)
+[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
+[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)
+[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)
+[![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+[![Dependency Status](https://david-dm.org/ipfs/npm-go-ipfs.svg?style=flat-square)](https://david-dm.org/ipfs/npm-go-ipfs)
+
+> install go-ipfs from npm
+
+## Table of Contents
+
+- [Install](#install)
+- [Usage](#usage)
+- [Development](#development)
+  - [Publish a new version](#publish-a-new-version)
+- [Contribute](#contribute)
+- [License](#license)
+
+## Install
 
 Install the latest [go-ipfs](https://github.com/ipfs/go-ipfs/) binary.
 
@@ -9,7 +26,6 @@ npm install -g go-ipfs
 ```
 
 Installs from [https://gobuilder.me/github.com/ipfs/go-ipfs/cmd/ipfs](https://gobuilder.me/github.com/ipfs/go-ipfs/cmd/ipfs).
-
 
 ## Usage
 
@@ -54,3 +70,15 @@ This will:
 - publish to `go-ipfs@$version` to https://npmjs.com/package/go-ipfs
 
 Open an issue in the repo if you run into trouble.
+
+## Contribute
+
+Feel free to join in. All welcome. Open an [issue](https://github.com/ipfs/npm-go-ipfs/issues)!
+
+This repository falls under the IPFS [Code of Conduct](https://github.com/ipfs/community/blob/master/code-of-conduct.md).
+
+[![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)](https://github.com/ipfs/community/blob/master/contributing.md)
+
+## License
+
+[MIT](LICENSE)
