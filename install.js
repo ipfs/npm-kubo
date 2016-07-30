@@ -14,9 +14,9 @@ checkPlatform(goenv) // make sure we can do this.
 // hacky hack hack to work around unpublishability
 version = version.replace(/-[0-9]+/, "")
 
-var filename = "v"+version+'/go-ipfs_v'+ version +'_' + goenv.GOOS + '-' + goenv.GOARCH + (goenv.GOOS=="windows"?".zip":".tar.gz");
+var filename = 'go-ipfs_v'+ version +'_' + goenv.GOOS + '-' + goenv.GOARCH + (goenv.GOOS=="windows"?".zip":".tar.gz");
 //                 v0.4.2   /go-ipfs_v   0.4.2     _    linux         -    amd64           .tar.gz
-var url = 'https://dist.ipfs.io/go-ipfs/' + filename
+var url = 'https://dist.ipfs.io/go-ipfs/v'+version+"/" + filename
 
 var bin = path.dirname(ipfs)
 var tmp = path.join(__dirname, 'tmp')
