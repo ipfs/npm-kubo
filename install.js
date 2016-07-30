@@ -14,8 +14,9 @@ checkPlatform(goenv) // make sure we can do this.
 // hacky hack hack to work around unpublishability
 version = version.replace(/-[0-9]+/, "")
 
-var filename = 'ipfs_v'+ version +'_' + goenv.GOOS + '-' + goenv.GOARCH + '.zip'
-var url = 'https://gobuilder.me/get/github.com/ipfs/go-ipfs/cmd/ipfs/' + filename
+var filename = "v"+version+'/go-ipfs_v'+ version +'_' + goenv.GOOS + '-' + goenv.GOARCH + (goenv.GOOS=="windows"?".zip":".tar.gz");
+//                 v0.4.2   /go-ipfs_v   0.4.2     _    linux         -    amd64           .tar.gz
+var url = 'https://dist.ipfs.io/go-ipfs/' + filename
 
 var bin = path.dirname(ipfs)
 var tmp = path.join(__dirname, 'tmp')
@@ -35,7 +36,7 @@ mkdirp(tmp, function(err) {
       if (err) return onerror(err)
 
       // move ipfs binary into place.
-      fs.rename(path.join(tmp, "ipfs", "ipfs"), installPath, function(err) {
+      fs.rename(path.join(tmp, "go-ipfs", "ipfs"), installPath, function(err) {
         if (err) return onerror(err)
 
         // remove zip from disk
@@ -57,6 +58,7 @@ function checkPlatform(goenv) {
   case "darwin":
   case "linux":
   case "freebsd":
+  case "windows":
     break
 
   default:
