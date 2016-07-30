@@ -6,6 +6,7 @@ var mkdirp = require('mkdirp');
 var nugget = require('nugget')
 var goenv = require('go-platform')
 var extract = require('extract-zip')
+var targz = require('tar.gz')
 var version = require('./package.json').version
 var ipfs = require('./')
 
@@ -23,6 +24,19 @@ var tmp = path.join(__dirname, 'tmp')
 var installPath = path.join(bin, 'ipfs')
 var zipfile = path.join(tmp, filename)
 
+function move() {
+  // move ipfs binary into place.
+  fs.rename(path.join(tmp, "go-ipfs", "ipfs"), installPath, function(err) {
+    if (err) return onerror(err)
+
+    // remove zip from disk
+    fs.unlink(zipfile, function(err) {
+      if (err) return onerror(err)
+
+    })
+  })
+}
+
 // mk tmp dir
 mkdirp(tmp, function(err) {
   if (err) onerror(err)
@@ -31,21 +45,22 @@ mkdirp(tmp, function(err) {
   nugget(url, {target: filename, dir: tmp, resume: true, verbose: true}, function (err) {
     if (err) return onerror(err)
 
-    // extract zip
-    extract(zipfile, {dir: tmp}, function (err) {
-      if (err) return onerror(err)
-
-      // move ipfs binary into place.
-      fs.rename(path.join(tmp, "go-ipfs", "ipfs"), installPath, function(err) {
+    if (filename.endsWith(".zip")) {
+      // extract zip
+      extract(zipfile, {dir: tmp}, function (err) {
         if (err) return onerror(err)
-
-        // remove zip from disk
-        fs.unlink(zipfile, function(err) {
-          if (err) return onerror(err)
-
-        })
+        move();
       })
-    })
+    } else if (filename.endsWith(".tar.gz")) {
+      var read=fs.createReadStream(zipfile);
+      var write = targz().createWriteStream(tmp);
+      read.pipe(write);
+      write.on("end",function() {
+        move();
+      });
+    } else {
+      throw new Error("Format not supported");
+    }
   })
 })
 
