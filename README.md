@@ -8,6 +8,12 @@
 
 > install go-ipfs from npm
 
+# Important note
+
+This module is now phased out as it uses `gobuilder` to download the IPFS binary, not longer available. If you are looking for a Node.js module to download the IPFS binary from the official source (dist.ipfs.io), please use [go-ipfs-dep](https://www.npmjs.com/package/go-ipfs-dep).
+
+--------------------
+
 ## Table of Contents
 
 - [Install](#install)
