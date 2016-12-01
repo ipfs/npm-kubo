@@ -32,11 +32,11 @@ Installs from [https://gobuilder.me/github.com/ipfs/go-ipfs/cmd/ipfs](https://go
 ```sh
 > npm install -g go-ipfs
 > ipfs version
-ipfs version 0.3.11
+ipfs version 0.4.0
 
 > npm install go-ipfs
 > node_modules/.bin/ipfs
-ipfs version 0.3.11
+ipfs version 0.4.0
 ```
 
 See [IPFS getting-started](http://ipfs.io/docs/getting-started). If anything goes wrong, try using: [http://ipfs.io/docs/install](http://ipfs.io/docs/install).
@@ -70,6 +70,27 @@ This will:
 - publish to `go-ipfs@$version` to https://npmjs.com/package/go-ipfs
 
 Open an issue in the repo if you run into trouble.
+
+### Publish a new version of this module with exact same go-ipfs version
+
+If some problem happens, and you need to publish a new version of this module targetting _the same_ go-ipfs version, then please follow this convention:
+
+1. **Clean up bad stuff:** unpublish all modules with this exact same `<go-ipfs-version>`
+2. **Add a "hacky" version suffix:** use version: `<go-ipfs-version>-hacky<num>`
+3. **Publish version:** publish the module. Since it's the only one with the go-ipfs version, then it should be installed.
+
+> Why do this?
+
+Well, if you previously published npm module `go-ipfs@0.4.0` and there was a problem, we now must publish a different version, but we want to keep the version number the same. so the strategy is to publish as `go-ipfs@0.4.0-hacky1`, and unpublish `go-ipfs@0.4.0`.
+
+> Why `-hacky<num>`?
+
+Because it is unlikely to be a legitimate go-ipfs version, and we want to support go-ipfs versions like `floodsub-1` etc.
+
+> Do i have to say `-hacky<num>` or can i just use `-<num>`?
+
+`-<num>` won't work, as [link-ipfs.js](./link-ipfs.js) expects `-hacky<num>`. If you want to
+change the convention, go for it, and update this readme accordingly.
 
 ## Contribute
 

@@ -1,7 +1,8 @@
 var test = require('tape')
 var fs = require('fs')
+var path = require('path')
 var cp = require('child_process')
-var ipfs = require('../')
+var ipfs = path.join(__dirname, "..", "bin", "ipfs")
 
 test('ensure ipfs bin path exists', function(t) {
   t.plan(4)
