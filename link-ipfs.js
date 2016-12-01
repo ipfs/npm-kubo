@@ -6,7 +6,9 @@ var cproc = require('child_process')
 var version = require('./package.json').version
 version = version.replace(/-hacky[0-9]+/, "") // remove superfluous -suffix.
 
-const depBin = path.join(__dirname, "node_modules", "go-ipfs-dep", "go-ipfs", "ipfs")
+var depPath = require.resolve('go-ipfs-dep')
+depPath = path.dirname(path.dirname(depPath)) // walk up ../../
+const depBin = path.join(depPath, "go-ipfs", "ipfs")
 const localBin = path.join(__dirname, "bin", "ipfs")
 
 if (!fs.existsSync(depBin)) {
