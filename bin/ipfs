@@ -1,5 +1,1 @@
-#!/bin/sh
-echo "something went wrong installing ipfs."
-echo "this file should've been overwritten"
-echo "try again?"
-exit 1
+/Users/ground-control/code/npm-go-ipfs/node_modules/go-ipfs-dep/go-ipfs/ipfs
