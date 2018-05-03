@@ -1,1 +1,3 @@
-/Users/tmp/code/npm-go-ipfs/node_modules/go-ipfs-dep/go-ipfs/ipfs
+#!/usr/bin/env node
+
+console.log('IPFS is not installed.')

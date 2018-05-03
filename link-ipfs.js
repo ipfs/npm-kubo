@@ -1,22 +1,39 @@
 'use strict'
 
-var fs = require('fs')
-var path = require('path')
-var cproc = require('child_process')
-var version = require('./package.json').version
-version = version.replace(/-hacky[0-9]+/, '') // remove superfluous -suffix.
+const fs = require('fs')
+const path = require('path')
+const cproc = require('child_process')
+const isWin = process.platform === 'win32'
+const version = require('./package.json').version
+  .replace(/-hacky[0-9]+/, '') // remove superfluous -suffix.
 
 var depPath = require.resolve('go-ipfs-dep')
 depPath = path.dirname(path.dirname(depPath)) // walk up ../../
-const depBin = path.join(depPath, 'go-ipfs', 'ipfs')
-const localBin = path.join(__dirname, 'bin', 'ipfs')
+var depBin = path.join(depPath, 'go-ipfs', 'ipfs')
+var localBin = path.join(__dirname, 'bin', 'ipfs')
+
+if (isWin) {
+  depBin += '.exe'
+  localBin += '.exe'
+}
 
 if (!fs.existsSync(depBin)) {
   die('ipfs binary not found. maybe go-ipfs-dep did not install correctly?')
 }
 
-fs.unlinkSync(localBin)
+if (fs.existsSync(localBin)) {
+  fs.unlinkSync(localBin)
+}
+
 fs.symlinkSync(depBin, localBin)
+
+if (isWin) {
+  // On Windows, update the shortcut file to use the .exe
+  let cmdFile = path.join(__dirname, '..', '..', 'ipfs.cmd')
+
+  fs.writeFileSync(cmdFile, `@ECHO OFF
+"%~dp0\\node_modules\\go-ipfs\\bin\\ipfs.exe" %*`)
+}
 
 // test ipfs installed correctly.
 var result = cproc.spawnSync(localBin, ['version'])
