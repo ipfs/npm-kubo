@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "install": "node link-ipfs.js",
-    "test": "tape test/*.js | tap-spec"
+    "test": "tape test/*.js | tap-spec",
+    "lint": "standard"
   },
   "bin": {
     "ipfs": "bin/ipfs"
@@ -33,6 +34,7 @@
   },
   "homepage": "https://github.com/ipfs/npm-go-ipfs",
   "devDependencies": {
+    "standard": "^11.0.1",
     "tap-spec": "^4.1.1",
     "tape": "^4.9.0"
   }
