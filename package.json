@@ -27,7 +27,7 @@
     "ipfs",
     "install"
   ],
-  "author": "Juan Benet <juan@benet.ai> (http://juan.benet.ai/)",
+  "author": "Protocol Labs, Inc.",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ipfs/npm-go-ipfs/issues"
