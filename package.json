@@ -1,41 +1,39 @@
 {
   "name": "go-ipfs",
   "version": "0.4.21",
-  "description": "Install the latest go-ipfs binary",
-  "main": "index.js",
-  "scripts": {
-    "install": "node link-ipfs.js",
-    "test": "tape test/*.js | tap-spec",
-    "lint": "standard"
-  },
+  "description": "Install the latest go-ipfs binary locally or globally",
+  "preferGlobal": true,
+  "main": "src/index.js",
   "bin": {
     "ipfs": "bin/ipfs"
+  },
+  "scripts": {
+    "install": "binwrap-install",
+    "prepare": "binwrap-prepare",
+    "prepublishOnly": "npm test",
+    "test": "binwrap-test",
+    "test2": "tape test/*.js | tap-spec",
+    "lint": "standard"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ipfs/npm-go-ipfs.git"
   },
   "dependencies": {
-    "go-ipfs-dep": "0.4.21",
-    "go-platform": "^1.0.0",
-    "gunzip-maybe": "^1.4.1",
-    "request": "^2.88.0",
-    "tar-fs": "^1.16.3",
-    "unzip": "~0.1.11"
+    "binwrap": "github:daviddias/binwrap"
+  },
+  "devDependencies": {
+    "standard": "^12.0.1",
+    "tap-spec": "^5.0.0",
+    "tape": "^4.9.1"
   },
   "keywords": [
     "ipfs",
     "install"
   ],
-  "author": "Protocol Labs, Inc.",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ipfs/npm-go-ipfs/issues"
   },
-  "homepage": "https://github.com/ipfs/npm-go-ipfs",
-  "devDependencies": {
-    "standard": "^12.0.1",
-    "tap-spec": "^5.0.0",
-    "tape": "^4.9.1"
-  }
+  "homepage": "https://github.com/ipfs/npm-go-ipfs"
 }
