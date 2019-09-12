@@ -1,3 +1,6 @@
+bin
+unpacked_bin
+
 **/node_modules/
 **/*.log
 test/repo-tests*
