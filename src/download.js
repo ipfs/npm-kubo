@@ -128,7 +128,7 @@ async function link ({ depBin, version }) {
   }
 
   if (!fs.existsSync(depBin)) {
-    throw new Error('ipfs binary not found. maybe go-ipfs-dep did not install correctly?')
+    throw new Error('ipfs binary not found. maybe go-ipfs did not install correctly?')
   }
 
   if (fs.existsSync(localBin)) {
