@@ -18,13 +18,13 @@ jobs:
         with:
           node-version: 12
       - name: Install
-      if: steps.check.Outputs.publish == 'true'
+        if: steps.check.Outputs.publish == 'true'
         run: npm install
       - name: Test
-      if: steps.check.Outputs.publish == 'true'
+        if: steps.check.Outputs.publish == 'true'
         run: npm test
       - name: Publish
-      if: steps.check.Outputs.publish == 'true'
+        if: steps.check.Outputs.publish == 'true'
         uses: ./.github/actions/publish
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
