@@ -1,0 +1,7 @@
+name: 'Check for go-ipfs release'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+outputs:
+  publish:
+    description: 'Whether to publish a new version'
