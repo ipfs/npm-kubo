@@ -1,0 +1,4 @@
+name: 'Publish release'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

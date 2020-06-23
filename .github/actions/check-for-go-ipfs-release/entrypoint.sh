@@ -16,9 +16,10 @@ fi
 
 if [[ "$CURRENT" != "$LATEST" ]]; then
   echo "🎉 New release exists $LATEST"
+
+  echo "::set-output name=publish::true"
 else
   echo "💤 $CURRENT is the latest release. Going back to sleep"
-  # neutral github action exit... not good, not bad.
-  # https://developer.github.com/actions/creating-github-actions/accessing-the-runtime-environment/#exit-codes-and-statuses
-  exit 78
+
+  echo "::set-output name=publish::false"
 fi
