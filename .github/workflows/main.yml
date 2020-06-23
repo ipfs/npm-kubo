@@ -13,18 +13,18 @@ jobs:
         id: check
         uses: ./.github/actions/check-for-go-ipfs-release
       - name: Set up node
-        if: steps.check.Outputs.publish == 'true'
+        if: steps.check.outputs.publish == 'true'
         uses: actions/setup-node@v1
         with:
           node-version: 12
       - name: Install
-        if: steps.check.Outputs.publish == 'true'
+        if: steps.check.outputs.publish == 'true'
         run: npm install
       - name: Test
-        if: steps.check.Outputs.publish == 'true'
+        if: steps.check.outputs.publish == 'true'
         run: npm test
       - name: Publish
-        if: steps.check.Outputs.publish == 'true'
+        if: steps.check.outputs.publish == 'true'
         uses: ./.github/actions/publish
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
