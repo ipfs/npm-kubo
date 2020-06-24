@@ -43,10 +43,13 @@ if [[ "$CURRENT" != "$LATEST" ]]; then
     echo "🎉 Found new go-ipfs release $LATEST@$NPM_DIST_TAG"
   fi
 
-
   # The workspace starts as a detached commit for scheduled builds...
   git rev-parse --abbrev-ref HEAD
   git checkout master
+
+  # post-install rewrites bin/ipfs so undo that change
+  git checkout -- bin/ipfs
+
   # Set sensible commit info
   git config --global user.name "${GITHUB_ACTOR}"
   git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
