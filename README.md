@@ -19,31 +19,35 @@
 
 ## Install
 
-Install the latest [go-ipfs](https://github.com/ipfs/go-ipfs/) binary.
-
-```
-npm install -g go-ipfs
-```
-
-Installs from [https://gobuilder.me/github.com/ipfs/go-ipfs/cmd/ipfs](https://gobuilder.me/github.com/ipfs/go-ipfs/cmd/ipfs).
-
-## Usage
+Install the latest [go-ipfs](https://github.com/ipfs/go-ipfs/) binary:
 
 ```sh
 # Install globally
 > npm install -g go-ipfs
 > ipfs version
-ipfs version v0.4.22
+ipfs version v0.6.0
 
 # Install locally
 > npm install go-ipfs
 > ./node_modules/.bin/ipfs
-ipfs version v0.4.22
+ipfs version v0.6.0
 ```
 
-See [IPFS getting-started](http://ipfs.io/docs/getting-started). If anything goes wrong, try using: [http://ipfs.io/docs/install](http://ipfs.io/docs/install).
+## Usage
 
-**Warning:** this module uses the _latest_ version of ipfs. If there is a strong need to vendor an older version, let us know. We care about versions very much :(  but for a number of reasons, this is easier for us all right now.
+This module downloads `go-ipfs` binaries from https://dist.ipfs.io into your project.
+
+It will download the go-ipfs version that matches the npm version of this module. So depending on `go-ipfs@0.6.0` will install `go-ipfs v0.6.0` for your current system architecture, in to your project at `node_modules/go-ipfs/bin/ipfs`.
+
+After downloading you can find out the path of the installed binary by calling the `path` function exported by this module:
+
+```javascript
+const { path } = require('go-ipfs')
+
+console.info('go-ipfs is installed at', path())
+```
+
+An error will be thrown if the path to the binary cannot be resolved.
 
 ## Development
 
