@@ -25,19 +25,19 @@ Install the latest [go-ipfs](https://github.com/ipfs/go-ipfs/) binary:
 # Install globally
 > npm install -g go-ipfs
 > ipfs version
-ipfs version v0.6.0
+ipfs version v0.7.0
 
 # Install locally
 > npm install go-ipfs
 > ./node_modules/.bin/ipfs
-ipfs version v0.6.0
+ipfs version v0.7.0
 ```
 
 ## Usage
 
 This module downloads `go-ipfs` binaries from https://dist.ipfs.io into your project.
 
-It will download the go-ipfs version that matches the npm version of this module. So depending on `go-ipfs@0.6.0` will install `go-ipfs v0.6.0` for your current system architecture, in to your project at `node_modules/go-ipfs/bin/ipfs`.
+It will download the go-ipfs version that matches the npm version of this module. So depending on `go-ipfs@0.7.0` will install `go-ipfs v0.7.0` for your current system architecture, in to your project at `node_modules/go-ipfs/bin/ipfs`.
 
 After downloading you can find out the path of the installed binary by calling the `path` function exported by this module:
 
