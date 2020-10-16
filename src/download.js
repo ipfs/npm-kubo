@@ -15,15 +15,59 @@
 */
 const goenv = require('go-platform')
 const gunzip = require('gunzip-maybe')
+const got = require('got')
 const path = require('path')
 const tarFS = require('tar-fs')
 const unzip = require('unzip-stream')
-const fetch = require('node-fetch')
 const pkgConf = require('pkg-conf')
+const cachedir = require('cachedir')
 const pkg = require('../package.json')
 const fs = require('fs')
+const hasha = require('hasha')
 const cproc = require('child_process')
 const isWin = process.platform === 'win32'
+
+// avoid expensive fetch if file is already in cache
+async function cachingFetchAndVerify (url) {
+  const cacheDir = process.env.NPM_GO_IPFS_CACHE || cachedir('npm-go-ipfs')
+  const filename = url.split('/').pop()
+  const cachedFilePath = path.join(cacheDir, filename)
+  const cachedHashPath = `${cachedFilePath}.sha512`
+
+  if (!fs.existsSync(cacheDir)) {
+    fs.mkdirSync(cacheDir, { recursive: true })
+  }
+  if (!fs.existsSync(cachedFilePath)) {
+    console.info(`Downloading ${url} to ${cacheDir}`)
+    // download file
+    fs.writeFileSync(cachedFilePath, await got(url).buffer())
+    console.info(`Downloaded ${url}`)
+
+    // ..and checksum
+    console.info(`Downloading ${filename}.sha512`)
+    fs.writeFileSync(cachedHashPath, await got(`${url}.sha512`).buffer())
+    console.info(`Downloaded ${filename}.sha512`)
+  } else {
+    console.info(`Found ${cachedFilePath}`)
+  }
+
+  console.info(`Verifying ${filename}.sha512`)
+
+  const digest = Buffer.alloc(128)
+  const fd = fs.openSync(cachedHashPath, 'r')
+  fs.readSync(fd, digest, 0, digest.length, 0)
+  fs.closeSync(fd)
+  const expectedSha = digest.toString('utf8')
+  const calculatedSha = await hasha.fromFile(cachedFilePath, { encoding: 'hex', algorithm: 'sha512' })
+  if (calculatedSha !== expectedSha) {
+    console.log(`Expected   SHA512: ${expectedSha}`)
+    console.log(`Calculated SHA512: ${calculatedSha}`)
+    throw new Error(`SHA512 of ${cachedFilePath}' (${calculatedSha}) does not match expected value from ${cachedFilePath}.sha512 (${expectedSha})`)
+  }
+  console.log(`OK (${expectedSha})`)
+
+  return fs.createReadStream(cachedFilePath)
+}
 
 function unpack (url, installPath, stream) {
   return new Promise((resolve, reject) => {
@@ -66,13 +110,8 @@ function cleanArguments (version, platform, arch, installPath) {
 }
 
 async function ensureVersion (version, distUrl) {
-  const res = await fetch(`${distUrl}/go-ipfs/versions`)
   console.info(`${distUrl}/go-ipfs/versions`)
-  if (!res.ok) {
-    throw new Error(`Unexpected status: ${res.status}`)
-  }
-
-  const versions = (await res.text()).trim().split('\n')
+  const versions = (await got(`${distUrl}/go-ipfs/versions`).text()).trim().split('\n')
 
   if (versions.indexOf(version) === -1) {
     throw new Error(`Version '${version}' not available`)
@@ -82,9 +121,7 @@ async function ensureVersion (version, distUrl) {
 async function getDownloadURL (version, platform, arch, distUrl) {
   await ensureVersion(version, distUrl)
 
-  const res = await fetch(`${distUrl}/go-ipfs/${version}/dist.json`)
-  if (!res.ok) throw new Error(`Unexpected status: ${res.status}`)
-  const data = await res.json()
+  const data = await got(`${distUrl}/go-ipfs/${version}/dist.json`).json()
 
   if (!data.platforms[platform]) {
     throw new Error(`No binary available for platform '${platform}'`)
@@ -100,19 +137,9 @@ async function getDownloadURL (version, platform, arch, distUrl) {
 
 async function download ({ version, platform, arch, installPath, distUrl }) {
   const url = await getDownloadURL(version, platform, arch, distUrl)
+  const data = await cachingFetchAndVerify(url)
 
-  console.info(`Downloading ${url}`)
-
-  const res = await fetch(url)
-
-  if (!res.ok) {
-    throw new Error(`Unexpected status: ${res.status}`)
-  }
-
-  console.info(`Downloaded ${url}`)
-
-  await unpack(url, installPath, res.body)
-
+  await unpack(url, installPath, data)
   console.info(`Unpacked ${installPath}`)
 
   return path.join(installPath, 'go-ipfs', `ipfs${platform === 'windows' ? '.exe' : ''}`)

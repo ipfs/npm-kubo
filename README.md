@@ -49,9 +49,13 @@ console.info('go-ipfs is installed at', path())
 
 An error will be thrown if the path to the binary cannot be resolved.
 
+### Caching
+
+Downloaded archives are placed in OS-specific cache directory which can be customized by setting `NPM_GO_IPFS_CACHE` in env.
+
 ## Development
 
-**Warning**: the file `bin/ipfs` is a placeholder, when downloading stuff, it gets replaced. so if you run `node install.js` it will then be dirty in the git repo. **Do not commit this file**, as then you would be commiting a big binary and publishing it to npm. (**TODO: add a pre-commit or pre-publish hook that warns about this**)
+**Warning**: the file `bin/ipfs` is a placeholder, when downloading stuff, it gets replaced. so if you run `node install.js` it will then be dirty in the git repo. **Do not commit this file**, as then you would be commiting a big binary and publishing it to npm. A pre-commit hook exists and should protect against this, but better safe than sorry.
 
 ### Publish a new version
 
