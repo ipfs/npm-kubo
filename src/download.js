@@ -1,7 +1,5 @@
 'use strict'
 
-'use strict'
-
 /*
   Download go-ipfs distribution package for desired version, platform and architecture,
   and unpack it to a desired output directory.
