@@ -7,8 +7,5 @@
   "license": "ISC",
   "dependencies": {
     "go-ipfs": "file://../../../"
-  },
-  "go-ipfs": {
-    "version": "v0.4.20"
   }
 }
