@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:14
 
 LABEL "com.github.actions.name"="Update and publish"
 LABEL "com.github.actions.description"="Publish new version when a new go-ipfs version is relased"
