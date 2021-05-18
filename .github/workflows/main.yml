@@ -1,5 +1,6 @@
 name: Release to npm
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 * * * *'
 
@@ -16,7 +17,7 @@ jobs:
         if: steps.check.outputs.publish == 'true'
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14.x
       - name: Install
         if: steps.check.outputs.publish == 'true'
         run: npm install

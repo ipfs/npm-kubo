@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "postinstall": "node src/post-install.js",
-    "restore-bin": "git restore --source=HEAD --staged --worktree -- bin/ipfs",
+    "restore-bin": "git reset -- bin/ipfs && git checkout -- bin/ipfs",
     "test": "tape test/*.js | tap-spec",
     "lint": "standard"
   },
