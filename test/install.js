@@ -24,7 +24,7 @@ test('Ensure go-ipfs defined in package.json is fetched on dependency install', 
   const exampleProjectRoot = path.join(__dirname, 'fixtures', 'example-project')
 
   // from `example-project`, install the module
-  const res = execa.sync('npm', ['install'], {
+  execa.sync('npm', ['install'], {
     cwd: exampleProjectRoot
   })
 
