@@ -13,13 +13,15 @@
     go-ipfs architecture: the architecture of the hardware this program is run from
     go-ipfs install path: './go-ipfs'
 */
+// @ts-ignore no types
 const goenv = require('go-platform')
 const gunzip = require('gunzip-maybe')
-const got = require('got')
+const got = require('got').default
 const path = require('path')
 const tarFS = require('tar-fs')
 const unzip = require('unzip-stream')
 const pkgConf = require('pkg-conf')
+// @ts-ignore no types
 const cachedir = require('cachedir')
 const pkg = require('../package.json')
 const fs = require('fs')
@@ -27,10 +29,18 @@ const hasha = require('hasha')
 const cproc = require('child_process')
 const isWin = process.platform === 'win32'
 
-// avoid expensive fetch if file is already in cache
+/**
+ * avoid expensive fetch if file is already in cache
+ * @param {string} url
+ */
 async function cachingFetchAndVerify (url) {
   const cacheDir = process.env.NPM_GO_IPFS_CACHE || cachedir('npm-go-ipfs')
   const filename = url.split('/').pop()
+
+  if (!filename) {
+    throw new Error('Invalid URL')
+  }
+
   const cachedFilePath = path.join(cacheDir, filename)
   const cachedHashPath = `${cachedFilePath}.sha512`
 
@@ -69,6 +79,11 @@ async function cachingFetchAndVerify (url) {
   return fs.createReadStream(cachedFilePath)
 }
 
+/**
+ * @param {string} url
+ * @param {string} installPath
+ * @param {import('stream').Readable} stream
+ */
 function unpack (url, installPath, stream) {
   return new Promise((resolve, reject) => {
     if (url.endsWith('.zip')) {
@@ -91,6 +106,12 @@ function unpack (url, installPath, stream) {
   })
 }
 
+/**
+ * @param {string} [version]
+ * @param {string} [platform]
+ * @param {string} [arch]
+ * @param {string} [installPath]
+ */
 function cleanArguments (version, platform, arch, installPath) {
   const conf = pkgConf.sync('go-ipfs', {
     cwd: process.env.INIT_CWD || process.cwd(),
@@ -109,6 +130,10 @@ function cleanArguments (version, platform, arch, installPath) {
   }
 }
 
+/**
+ * @param {string} version
+ * @param {string} distUrl
+ */
 async function ensureVersion (version, distUrl) {
   console.info(`${distUrl}/go-ipfs/versions`)
   const versions = (await got(`${distUrl}/go-ipfs/versions`).text()).trim().split('\n')
@@ -118,6 +143,12 @@ async function ensureVersion (version, distUrl) {
   }
 }
 
+/**
+ * @param {string} version
+ * @param {string} platform
+ * @param {string} arch
+ * @param {string} distUrl
+ */
 async function getDownloadURL (version, platform, arch, distUrl) {
   await ensureVersion(version, distUrl)
 
@@ -135,6 +166,14 @@ async function getDownloadURL (version, platform, arch, distUrl) {
   return `${distUrl}/go-ipfs/${version}${link}`
 }
 
+/**
+ * @param {object} options
+ * @param {string} options.version
+ * @param {string} options.platform
+ * @param {string} options.arch
+ * @param {string} options.installPath
+ * @param {string} options.distUrl
+ */
 async function download ({ version, platform, arch, installPath, distUrl }) {
   const url = await getDownloadURL(version, platform, arch, distUrl)
   const data = await cachingFetchAndVerify(url)
@@ -145,6 +184,11 @@ async function download ({ version, platform, arch, installPath, distUrl }) {
   return path.join(installPath, 'go-ipfs', `ipfs${platform === 'windows' ? '.exe' : ''}`)
 }
 
+/**
+ * @param {object} options
+ * @param {string} options.depBin
+ * @param {string} options.version
+ */
 async function link ({ depBin, version }) {
   let localBin = path.resolve(path.join(__dirname, '..', 'bin', 'ipfs'))
 
@@ -179,6 +223,11 @@ async function link ({ depBin, version }) {
 
   var outstr = result.stdout.toString()
   var m = /ipfs version ([^\n]+)\n/.exec(outstr)
+
+  if (!m) {
+    throw new Error('Could not determine IPFS version')
+  }
+
   var actualVersion = `v${m[1]}`
 
   if (actualVersion !== version) {
@@ -188,8 +237,14 @@ async function link ({ depBin, version }) {
   return localBin
 }
 
-module.exports = async (...args) => {
-  args = cleanArguments(...args)
+/**
+ * @param {string} [version]
+ * @param {string} [platform]
+ * @param {string} [arch]
+ * @param {string} [installPath]
+ */
+module.exports = async (version, platform, arch, installPath) => {
+  const args = cleanArguments(version, platform, arch, installPath)
 
   return link({
     ...args,

@@ -15,5 +15,5 @@ module.exports.path = function () {
     }
   }
 
-  throw new Error('go-ipfs binary not found, it may not be installed or an error may have occured during installation')
+  throw new Error('go-ipfs binary not found, it may not be installed or an error may have occurred during installation')
 }
