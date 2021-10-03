@@ -14,7 +14,7 @@
     go-ipfs install path: './go-ipfs'
 */
 // @ts-ignore no types
-const goenv = require('go-platform')
+const goenv = require('./go-platform')
 const gunzip = require('gunzip-maybe')
 const got = require('got').default
 const path = require('path')
