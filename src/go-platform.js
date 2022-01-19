@@ -1,31 +1,33 @@
-const env = {}
+'use strict'
 
-switch (process.platform) {
-  case "darwin":
-  case "linux":
-  case "freebsd":
-    env.GOOS = process.platform
-    break
-  case "sunos":
-    env.GOOS = "solaris"
-    break
-  case "win32":
-    env.GOOS = "windows"
-    break
+function getGoOs () {
+  switch (process.platform) {
+    case "sunos":
+      return "solaris"
+    case "win32":
+      return "windows"
+  }
+
+  return process.platform
 }
 
-switch (process.arch) {
-  case "ia32":
-    env.GOARCH = "386"
-    break
-  case "x64":
-    env.GOARCH = "amd64"
-    break
-  case "arm":
-    env.GOARCH = "arm"
-  case "arm64":
-    env.GOARCH = "arm64"
-    break
+function getGoArch () {
+  switch (process.arch) {
+    case "ia32":
+      return "386"
+    case "x64":
+      return "amd64"
+    case "arm":
+      return "arm"
+    case "arm64":
+      return "arm64"
+  }
+
+  return process.arch
 }
 
-module.exports = env
+
+module.exports = {
+  GOOS: getGoOs(),
+  GOARCH: getGoArch()
+}
