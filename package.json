@@ -1,6 +1,6 @@
 {
   "name": "go-ipfs",
-  "version": "0.14.0-rc1",
+  "version": "0.14.0",
   "description": "Install the latest go-ipfs binary",
   "main": "src/index.js",
   "scripts": {
