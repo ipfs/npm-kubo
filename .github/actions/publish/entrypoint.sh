@@ -53,7 +53,9 @@ if [[ "$CURRENT" != "$LATEST" ]]; then
   # Set sensible commit info
   git config --global user.name "${GITHUB_ACTOR}"
   git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-
+  
+  
+  npm install
   npm version $LATEST
   npm publish --access public --tag $NPM_DIST_TAG
   echo "📦 Published $LATEST to npm as go-ipfs@$NPM_DIST_TAG"
