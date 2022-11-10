@@ -29,7 +29,7 @@ test('Returns an error when version unsupported', async (t) => {
 test('Returns an error when dist url is 404', async (t) => {
   await clean()
 
-  process.env.GO_IPFS_DIST_URL = 'https://dist.ipfs.io/notfound'
+  process.env.GO_IPFS_DIST_URL = 'https://dist.ipfs.tech/notfound'
 
   await t.rejects(download(), /404/)
 
