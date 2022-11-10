@@ -1,12 +1,9 @@
 # npm-go-ipfs
 
-[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
-[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)
-[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)
+[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](https://ipfs.tech/)
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-[![Dependency Status](https://david-dm.org/ipfs/npm-go-ipfs.svg?style=flat-square)](https://david-dm.org/ipfs/npm-go-ipfs)
 
-> install go-ipfs from npm
+> install [Kubo](https://github.com/ipfs/kubo) (previously known as "go-ipfs") from npm
 
 ## Table of Contents
 
@@ -19,7 +16,7 @@
 
 ## Install
 
-Install the latest [go-ipfs](https://github.com/ipfs/go-ipfs/) binary:
+Install the latest [Kubo](https://github.com/ipfs/kubo/) (go-ipfs) binary:
 
 ```sh
 # Install globally
@@ -35,7 +32,7 @@ ipfs version v0.7.0
 
 ## Usage
 
-This module downloads `go-ipfs` binaries from https://dist.ipfs.io into your project.
+This module downloads Kubo (go-ipfs) binaries from https://dist.ipfs.tech into your project.
 
 It will download the go-ipfs version that matches the npm version of this module. So depending on `go-ipfs@0.7.0` will install `go-ipfs v0.7.0` for your current system architecture, in to your project at `node_modules/go-ipfs/go-ipfs/ipfs` and additional symlink to it at `node_modules/go-ipfs/bin/ipfs`.
 
@@ -71,7 +68,7 @@ publish a version of go-ipfs to npm
 
 This will:
 
-- check the version is indeed a tag in https://github.com/ipfs/go-ipfs
+- check the version is indeed a tag in https://github.com/ipfs/kubo
 - check the size of `bin/ipfs` is right (must be the checked in file)
 - update the version numbers in `package.json` and `README.md`
 - `git commit` the changes

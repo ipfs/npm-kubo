@@ -116,7 +116,7 @@ function cleanArguments (version, platform, arch, installPath) {
     cwd: process.env.INIT_CWD || process.cwd(),
     defaults: {
       version: 'v' + pkg.version.replace(/-[0-9]+/, ''),
-      distUrl: 'https://dist.ipfs.io'
+      distUrl: 'https://dist.ipfs.tech'
     }
   })
 
