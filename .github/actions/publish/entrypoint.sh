@@ -43,6 +43,8 @@ if [[ "$CURRENT" != "$LATEST" ]]; then
     echo "🎉 Found new go-ipfs release $LATEST@$NPM_DIST_TAG"
   fi
 
+  git config --global --add safe.directory /github/workspace
+  
   # The workspace starts as a detached commit for scheduled builds...
   git rev-parse --abbrev-ref HEAD
   git checkout master
