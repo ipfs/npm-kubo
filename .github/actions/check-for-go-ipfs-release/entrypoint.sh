@@ -17,9 +17,9 @@ fi
 if [[ "$CURRENT" != "$LATEST" ]]; then
   echo "🎉 New release exists $LATEST"
 
-  echo "::set-output name=publish::true"
+  echo "publish=true" >> $GITHUB_OUTPUT
 else
   echo "💤 $CURRENT is the latest release. Going back to sleep"
 
-  echo "::set-output name=publish::false"
+  echo "publish=false" >> $GITHUB_OUTPUT
 fi
