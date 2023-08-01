@@ -4,6 +4,10 @@ const fs = require('fs')
 const path = require('path')
 
 module.exports.path = function () {
+  if (process.env.KUBO_BINARY) {
+    return process.env.KUBO_BINARY
+  }
+
   const paths = [
     path.resolve(path.join(__dirname, '..', 'go-ipfs', 'ipfs')),
     path.resolve(path.join(__dirname, '..', 'go-ipfs', 'ipfs.exe'))
