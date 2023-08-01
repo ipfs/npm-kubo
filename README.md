@@ -54,7 +54,7 @@ Downloaded archives are placed in OS-specific cache directory which can be custo
 
 If the `KUBO_BINARY` env variable is set at runtime this will override the path of the binary used.
 
-This must points to the file, not the directory containing the file.
+This must point to the file, not the directory containing the file.
 
 ## Development
 
