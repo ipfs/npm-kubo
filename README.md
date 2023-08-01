@@ -50,6 +50,12 @@ An error will be thrown if the path to the binary cannot be resolved.
 
 Downloaded archives are placed in OS-specific cache directory which can be customized by setting `NPM_GO_IPFS_CACHE` in env.
 
+### Overriding with `KUBO_BINARY` env
+
+If the `KUBO_BINARY` env variable is set at runtime this will override the path of the binary used.
+
+This must points to the file, not the directory containing the file.
+
 ## Development
 
 **Warning**: the file `bin/ipfs` is a placeholder, when downloading stuff, it gets replaced. so if you run `node install.js` it will then be dirty in the git repo. **Do not commit this file**, as then you would be commiting a big binary and publishing it to npm. A pre-commit hook exists and should protect against this, but better safe than sorry.
