@@ -1,7 +1,7 @@
 {
-  "name": "go-ipfs",
+  "name": "kubo",
   "version": "0.22.0",
-  "description": "Install the latest go-ipfs binary",
+  "description": "Install the latest Kubo (go-ipfs) binary",
   "main": "src/index.js",
   "scripts": {
     "postinstall": "node src/post-install.js",
@@ -26,7 +26,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ipfs/npm-go-ipfs.git"
+    "url": "git+https://github.com/ipfs/npm-kubo.git"
   },
   "keywords": [
     "ipfs",
@@ -35,9 +35,9 @@
   "author": "Protocol Labs, Inc.",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ipfs/npm-go-ipfs/issues"
+    "url": "https://github.com/ipfs/npm-kubo/issues"
   },
-  "homepage": "https://github.com/ipfs/npm-go-ipfs",
+  "homepage": "https://github.com/ipfs/npm-kubo",
   "types": "./src/types.d.ts",
   "devDependencies": {
     "@types/got": "^9.6.12",

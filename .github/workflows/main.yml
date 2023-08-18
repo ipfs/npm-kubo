@@ -10,9 +10,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Check for new go-ipfs version
+      - name: Check for new kubo version
         id: check
-        uses: ./.github/actions/check-for-go-ipfs-release
+        uses: ./.github/actions/check-for-kubo-release
       - name: Set up node
         if: steps.check.outputs.publish == 'true'
         uses: actions/setup-node@v3

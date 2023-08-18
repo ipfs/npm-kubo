@@ -6,6 +6,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "go-ipfs": "file://../../../"
+    "kubo": "file://../../../"
   }
 }
