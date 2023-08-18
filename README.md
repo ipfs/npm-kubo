@@ -48,7 +48,7 @@ An error will be thrown if the path to the binary cannot be resolved.
 
 ### Caching
 
-Downloaded archives are placed in OS-specific cache directory which can be customized by setting `NPM_GO_IPFS_CACHE` in env.
+Downloaded archives are placed in OS-specific cache directory which can be customized by setting `NPM_KUBO_CACHE` in env.
 
 ### Overriding with `KUBO_BINARY` env
 

@@ -26,7 +26,19 @@ test('Returns an error when version unsupported', async (t) => {
   t.end()
 })
 
-test('Returns an error when dist url is 404', async (t) => {
+test('Returns an error when KUBO_DIST_URL is 404', async (t) => {
+  await clean()
+
+  process.env.KUBO_DIST_URL = 'https://dist.ipfs.tech/notfound'
+
+  await t.rejects(download(), /404/)
+
+  delete process.env.KUBO_DIST_URL
+
+  t.end()
+})
+
+test('Returns an error when legacy GO_IPFS_DIST_URL is 404', async (t) => {
   await clean()
 
   process.env.GO_IPFS_DIST_URL = 'https://dist.ipfs.tech/notfound'
@@ -37,6 +49,7 @@ test('Returns an error when dist url is 404', async (t) => {
 
   t.end()
 })
+
 
 test('Path returns undefined when no binary has been downloaded', async (t) => {
   await clean()
