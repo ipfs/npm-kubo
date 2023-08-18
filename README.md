@@ -1,9 +1,14 @@
-# npm-kubo
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/157609/250148884-d6d12db8-fdcf-4be3-8546-2550b69845d8.png" alt="Kubo logo" title="Kubo logo" width="200">
+<br>
+Kubo: IPFS Implementation in GO
+</h1>
+<p align="center" style="font-size: 1.2rem;">Install <a href="https://github.com/ipfs/kubo">Kubo</a> (previously known as "go-ipfs") from <a href="https://www.npmjs.com/package/kubo">NPM</a></p>
+
+<hr />
 
 [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](https://ipfs.tech/)
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
-
-> install [Kubo](https://github.com/ipfs/kubo) (previously known as "kubo") from npm
 
 ## Table of Contents
 
