@@ -12,3 +12,4 @@ package-lock.json
 
 # Where the binaries go
 go-ipfs
+kubo

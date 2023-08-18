@@ -1,4 +1,4 @@
-name: 'Check for go-ipfs release'
+name: 'Check for kubo release'
 runs:
   using: 'docker'
   image: 'Dockerfile'
