@@ -10,11 +10,12 @@
 <h4 align="center">Install <a href="https://github.com/ipfs/kubo">Kubo</a> (previously known as "go-ipfs") from <a href="https://www.npmjs.com/package/kubo">NPM</a></h4>
 
 <p align="center">
+  <a href="https://ipfs.tech"><img src="https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square" alt="Official Part of IPFS Project"></a>
+  <a href="https://discuss.ipfs.tech"><img alt="Discourse Forum" src="https://img.shields.io/discourse/posts?server=https%3A%2F%2Fdiscuss.ipfs.tech"></a>
   <a href="https://matrix.to/#/#ipfs-space:ipfs.io"><img alt="Matrix" src="https://img.shields.io/matrix/ipfs-space%3Aipfs.io?server_fqdn=matrix.org"></a>
   <a href="https://github.com/ipfs/npm-kubo/actions"><img src="https://img.shields.io/github/actions/workflow/status/ipfs/npm-kubo/main.yml?branch=master" alt="ci"></a>
   <a href="https://www.npmjs.com/package/kubo"><img src="https://img.shields.io/npm/v/kubo" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/kubo"><img src="https://img.shields.io/npm/dm/kubo.svg" alt="npm downloads"></a>
-  <a href="https://ipfs.tech"><img src="https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square" alt="Official Part of IPFS Project"></a>
 </p>
 
 ## Table of Contents
