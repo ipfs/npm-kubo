@@ -1,9 +1,21 @@
-# npm-kubo
+<h1 align="center">
+  <br>
+  <a href="https://docs.ipfs.tech/how-to/command-line-quick-start/"><img src="https://user-images.githubusercontent.com/157609/250148884-d6d12db8-fdcf-4be3-8546-2550b69845d8.png" alt="Kubo logo" title="Kubo logo" width="200"></a>
+  <br>
+  Kubo: IPFS Implementation in GO
+  <br>
+  <br>
+</h1>
 
-[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](https://ipfs.tech/)
-[![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+<h4 align="center">Install <a href="https://github.com/ipfs/kubo">Kubo</a> (previously known as "go-ipfs") from <a href="https://www.npmjs.com/package/kubo">NPM</a></h4>
 
-> install [Kubo](https://github.com/ipfs/kubo) (previously known as "go-ipfs") from npm
+<p align="center">
+  <a href="https://matrix.to/#/#ipfs-space:ipfs.io"><img alt="Matrix" src="https://img.shields.io/matrix/ipfs-space%3Aipfs.io?server_fqdn=matrix.org"></a>
+  <a href="https://github.com/ipfs/npm-kubo/actions"><img src="https://img.shields.io/github/actions/workflow/status/ipfs/npm-kubo/main.yml?branch=master" alt="ci"></a>
+  <a href="https://www.npmjs.com/package/kubo"><img src="https://img.shields.io/npm/v/kubo" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/kubo"><img src="https://img.shields.io/npm/dm/kubo.svg" alt="npm downloads"></a>
+  <a href="https://ipfs.tech"><img src="https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square" alt="Official Part of IPFS Project"></a>
+</p>
 
 ## Table of Contents
 
@@ -16,7 +28,7 @@
 
 ## Install
 
-Install the latest [Kubo](https://github.com/ipfs/kubo/) (kubo) binary:
+Install the latest [Kubo](https://github.com/ipfs/kubo/) (go-ipfs) binary:
 
 ```sh
 # Install globally
