@@ -33,7 +33,7 @@ const isWin = process.platform === 'win32'
  * @param {string} url
  */
 async function cachingFetchAndVerify (url) {
-  const cacheDir = process.env.NPM_GO_IPFS_CACHE || cachedir('npm-kubo')
+  const cacheDir = process.env.NPM_KUBO_CACHE || process.env.NPM_GO_IPFS_CACHE || cachedir('npm-kubo')
   const filename = url.split('/').pop()
 
   if (!filename) {
@@ -124,7 +124,7 @@ function cleanArguments (version, platform, arch, installPath) {
     version: process.env.TARGET_VERSION || version || conf.version,
     platform: process.env.TARGET_OS || platform || goenv.GOOS,
     arch: process.env.TARGET_ARCH || arch || goenv.GOARCH,
-    distUrl: process.env.GO_IPFS_DIST_URL || conf.distUrl,
+    distUrl: process.env.KUBO_DIST_URL || process.env.GO_IPFS_DIST_URL || conf.distUrl,
     installPath: installPath ? path.resolve(installPath) : process.cwd()
   }
 }
