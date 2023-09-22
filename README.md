@@ -3,7 +3,7 @@
 [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](https://ipfs.tech/)
 [![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-> install [Kubo](https://github.com/ipfs/kubo) (previously known as "kubo") from npm
+> install [Kubo](https://github.com/ipfs/kubo) (previously known as "go-ipfs") from npm
 
 ## Table of Contents
 
