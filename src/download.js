@@ -204,7 +204,11 @@ async function link ({ depBin, version }) {
   }
 
   console.info('Linking', depBin, 'to', localBin)
-  fs.symlinkSync(depBin, localBin)
+  if (isWin) {
+    fs.linkSync(depBin, localBin)
+  } else {
+    fs.symlinkSync(depBin, localBin)
+  }
 
   if (isWin) {
     // On Windows, update the shortcut file to use the .exe
