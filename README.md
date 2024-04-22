@@ -52,7 +52,7 @@ It will download the kubo version that matches the npm version of this module. S
 After downloading you can find out the path of the installed binary by calling the `path` function exported by this module:
 
 ```javascript
-const { path } = require('kubo')
+import { path } from 'kubo'
 
 console.info('kubo is installed at', path())
 ```
