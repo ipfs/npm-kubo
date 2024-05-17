@@ -2,6 +2,9 @@
 
 const fs = require('fs')
 const path = require('path')
+const { download } = require('./download')
+
+module.exports.download = download
 
 module.exports.path = function () {
   if (process.env.KUBO_BINARY) {

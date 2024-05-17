@@ -237,12 +237,22 @@ async function link ({ depBin, version }) {
 }
 
 /**
+* @param {object} options
+* @param {string} options.version
+* @param {string} options.platform
+* @param {string} options.arch
+* @param {string} options.installPath
+* @param {string} options.distUrl
+*/
+module.exports.download = download
+
+/**
  * @param {string} [version]
  * @param {string} [platform]
  * @param {string} [arch]
  * @param {string} [installPath]
  */
-module.exports = async (version, platform, arch, installPath) => {
+module.exports.downloadAndUpdateBin = async (version, platform, arch, installPath) => {
   const args = cleanArguments(version, platform, arch, installPath)
 
   return link({

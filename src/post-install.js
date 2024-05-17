@@ -1,8 +1,8 @@
 'use strict'
 
-const download = require('./download')
+const { downloadAndUpdateBin } = require('./download')
 
-download()
+downloadAndUpdateBin()
   .catch(err => {
     console.error(err)
     process.exit(1)
