@@ -4,6 +4,10 @@ var path = require('path')
 var cp = require('child_process')
 var ipfs = path.join(__dirname, '..', 'bin', 'ipfs')
 
+if (process.platform === 'win32') {
+  ipfs += '.exe'
+}
+
 test('ensure ipfs bin path exists', function (t) {
   t.plan(4)
   fs.stat(ipfs, function (err, stats) {

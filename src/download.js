@@ -207,7 +207,23 @@ async function link ({ depBin, version }) {
   }
 
   console.info('Linking', depBin, 'to', localBin)
-  fs.symlinkSync(depBin, localBin)
+  try {
+    fs.symlinkSync(depBin, localBin)
+  } catch (err) {
+    // Try to recover when creating symlink on modern Windows fails (https://github.com/ipfs/npm-kubo/issues/68)
+    if (isWin && typeof err === 'object' && err !== null && 'code' in err && err.code === 'EPERM') {
+      console.info('Symlink creation failed due to insufficient privileges. Attempting to copy file instead...')
+      try {
+        fs.copyFileSync(depBin, localBin)
+        console.info('Copying', depBin, 'to', localBin)
+      } catch (copyErr) {
+        console.error('File copy also failed:', copyErr)
+        throw copyErr
+      }
+    } else {
+      throw err
+    }
+  }
 
   if (isWin) {
     // On Windows, update the shortcut file to use the .exe
