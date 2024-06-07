@@ -3,7 +3,7 @@
 const test = require('tape-promise').default(require('tape'))
 const fs = require('fs-extra')
 const os = require('os')
-const path= require('path')
+const path = require('path')
 const { download, downloadAndUpdateBin } = require('../src/download')
 const { path: detectLocation } = require('../')
 const clean = require('./fixtures/clean')
@@ -72,7 +72,7 @@ test('Ensure calling download function manually with static values works', async
     platform: 'darwin',
     arch: 'arm64',
     distUrl: 'https://dist.ipfs.tech',
-    installPath: tempDir,
+    installPath: tempDir
   })
   console.log(kuboPath)
   const stats = await fs.stat(kuboPath)
