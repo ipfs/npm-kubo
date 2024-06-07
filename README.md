@@ -49,6 +49,8 @@ This module downloads Kubo (go-ipfs) binaries from https://dist.ipfs.tech into y
 
 It will download the kubo version that matches the npm version of this module. So depending on `kubo@0.23.0` will install `kubo v0.23.0` for your current system architecture, in to your project at `node_modules/kubo/kubo/ipfs` and additional symlink to it at `node_modules/kubo/bin/ipfs`.
 
+On Windows, `ipfs.exe` file is used, and if the symlink can't be created under a regular user, a copy of `ipfs.exe` is created instead.
+
 After downloading you can find out the path of the installed binary by calling the `path` function exported by this module:
 
 ```javascript
