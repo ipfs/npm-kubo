@@ -192,6 +192,9 @@ async function link ({ depBin, version }) {
   let localBin = path.resolve(path.join(__dirname, '..', 'bin', 'ipfs'))
 
   if (isWin) {
+    if (fs.existsSync(localBin)) {
+      fs.unlinkSync(localBin)
+    }
     localBin += '.exe'
   }
 
