@@ -1,6 +1,6 @@
 {
   "name": "kubo",
-  "version": "0.33.2",
+  "version": "0.34.0-rc1",
   "description": "Install the latest Kubo (go-ipfs) binary",
   "main": "src/index.js",
   "scripts": {
