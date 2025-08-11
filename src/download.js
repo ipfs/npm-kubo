@@ -183,6 +183,97 @@ async function download ({ version, platform, arch, installPath, distUrl }) {
   return path.join(installPath, 'kubo', `ipfs${platform === 'windows' ? '.exe' : ''}`)
 }
 
+// Error codes that trigger fallback mechanisms
+const FALLBACK_ERROR_CODES = ['EPERM', 'EACCES', 'ENOENT', 'EINVAL', 'ENOTDIR', 'EISDIR']
+
+/**
+ * Get error message from various error types
+ * @param {unknown} err
+ * @returns {string}
+ */
+function getErrorMessage (err) {
+  if (err instanceof Error) {
+    return err.message
+  }
+  return String(err)
+}
+
+/**
+ * Safely unlink a file, logging warnings instead of throwing
+ * @param {string} filePath
+ */
+function safeUnlink (filePath) {
+  if (!fs.existsSync(filePath)) {
+    return
+  }
+
+  try {
+    fs.unlinkSync(filePath)
+  } catch (err) {
+    console.warn(`Could not remove ${filePath}: ${getErrorMessage(err)}`)
+  }
+}
+
+/**
+ * Ensure directory exists, creating it if necessary
+ * @param {string} dirPath
+ */
+function ensureDirectory (dirPath) {
+  if (fs.existsSync(dirPath)) {
+    return
+  }
+
+  try {
+    fs.mkdirSync(dirPath, { recursive: true })
+  } catch (err) {
+    const msg = `Failed to create directory at ${dirPath}: ${getErrorMessage(err)}`
+    console.error(msg)
+    throw new Error(msg)
+  }
+}
+
+/**
+ * Attempt to create a link using various methods
+ * @param {string} source
+ * @param {string} destination
+ * @returns {boolean} true if successful
+ */
+function createLinkWithFallback (source, destination) {
+  // Try symlink first
+  try {
+    fs.symlinkSync(source, destination)
+    return true
+  } catch (symlinkErr) {
+    // @ts-ignore - error might have code property
+    const errorCode = symlinkErr && symlinkErr.code
+
+    if (!FALLBACK_ERROR_CODES.includes(errorCode)) {
+      throw symlinkErr
+    }
+
+    console.info(`Symlink creation failed (${errorCode}). Attempting to copy file instead...`)
+  }
+
+  // Fallback to copy
+  try {
+    fs.copyFileSync(source, destination)
+    console.info(`Successfully copied ${source} to ${destination}`)
+    return true
+  } catch (copyErr) {
+    console.error(`Failed to copy ${source} to ${destination}: ${getErrorMessage(copyErr)}`)
+
+    // Last resort: hard link
+    try {
+      fs.linkSync(source, destination)
+      console.info(`Successfully created hard link from ${source} to ${destination}`)
+      return true
+    } catch (hardLinkErr) {
+      console.error(`Hard link also failed: ${getErrorMessage(hardLinkErr)}`)
+      return false
+    }
+  }
+}
+
 /**
  * @param {object} options
  * @param {string} options.depBin
@@ -190,64 +281,59 @@ async function download ({ version, platform, arch, installPath, distUrl }) {
  */
 async function link ({ depBin, version }) {
   let localBin = path.resolve(path.join(__dirname, '..', 'bin', 'ipfs'))
+  const binDir = path.dirname(localBin)
 
+  // Ensure bin directory exists
+  ensureDirectory(binDir)
+
+  // Handle Windows-specific logic
   if (isWin) {
-    if (fs.existsSync(localBin)) {
-      fs.unlinkSync(localBin)
-    }
+    safeUnlink(localBin) // Remove non-.exe version if it exists
     localBin += '.exe'
   }
 
+  // Verify source binary exists
   if (!fs.existsSync(depBin)) {
     throw new Error('ipfs binary not found. maybe kubo did not install correctly?')
   }
 
-  if (fs.existsSync(localBin)) {
-    fs.unlinkSync(localBin)
+  // Remove existing destination
+  safeUnlink(localBin)
+
+  // Create the link
+  console.info(`Linking ${depBin} to ${localBin}`)
+
+  if (!createLinkWithFallback(depBin, localBin)) {
+    throw new Error(`Unable to create symlink, copy, or hard link from ${depBin} to ${localBin}`)
   }
 
-  console.info('Linking', depBin, 'to', localBin)
-  try {
-    fs.symlinkSync(depBin, localBin)
-  } catch (err) {
-    // Try to recover when creating symlink on modern Windows fails (https://github.com/ipfs/npm-kubo/issues/68)
-    if (isWin && typeof err === 'object' && err !== null && 'code' in err && err.code === 'EPERM') {
-      console.info('Symlink creation failed due to insufficient privileges. Attempting to copy file instead...')
-      try {
-        fs.copyFileSync(depBin, localBin)
-        console.info('Copying', depBin, 'to', localBin)
-      } catch (copyErr) {
-        console.error('File copy also failed:', copyErr)
-        throw copyErr
-      }
-    } else {
-      throw err
+  // Windows-specific: create .cmd file
+  if (isWin) {
+    const cmdFile = path.join(__dirname, '..', '..', 'ipfs.cmd')
+    const cmdContent = '@ECHO OFF\n"%~dp0\\node_modules\\kubo\\bin\\ipfs.exe" %*'
+
+    try {
+      fs.writeFileSync(cmdFile, cmdContent)
+    } catch (err) {
+      console.warn(`Could not create ipfs.cmd file: ${getErrorMessage(err)}`)
+      // Non-critical, continue
     }
   }
 
-  if (isWin) {
-    // On Windows, update the shortcut file to use the .exe
-    const cmdFile = path.join(__dirname, '..', '..', 'ipfs.cmd')
-
-    fs.writeFileSync(cmdFile, `@ECHO OFF
-  "%~dp0\\node_modules\\kubo\\bin\\ipfs.exe" %*`)
-  }
-
-  // test ipfs installed correctly.
-  var result = cproc.spawnSync(localBin, ['version'])
+  // Verify the binary works correctly
+  const result = cproc.spawnSync(localBin, ['version'])
   if (result.error) {
-    throw new Error('ipfs binary failed: ' + result.error)
+    throw new Error(`ipfs binary failed: ${result.error}`)
   }
 
-  var outstr = result.stdout.toString()
-  var m = /ipfs version ([^\n]+)\n/.exec(outstr)
+  const output = result.stdout.toString()
+  const versionMatch = /ipfs version ([^\n]+)\n/.exec(output)
 
-  if (!m) {
+  if (!versionMatch) {
     throw new Error('Could not determine IPFS version')
   }
 
-  var actualVersion = `v${m[1]}`
-
+  const actualVersion = `v${versionMatch[1]}`
   if (actualVersion !== version) {
     throw new Error(`version mismatch: expected ${version} got ${actualVersion}`)
   }
