@@ -1,3 +1,1 @@
-#!/usr/bin/env node
-
-console.log('IPFS is not installed.')
+/home/runner/work/unified-github-workflows/unified-github-workflows/ipfs/npm-kubo/kubo/ipfs
