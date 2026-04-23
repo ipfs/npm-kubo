@@ -7,6 +7,13 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      # Needed to push the version bump commit and tag back to master.
+      contents: write
+      # Needed for npm Trusted Publishing (OIDC). Required by `npm publish`
+      # when the package is configured with a Trusted Publisher on npmjs.com.
+      # https://docs.npmjs.com/trusted-publishers
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,9 +22,11 @@ jobs:
         uses: ./.github/actions/check-for-kubo-release
       - name: Set up node
         if: steps.check.outputs.publish == 'true'
+        # Node 24 ships npm >= 11.5.1, which is required for OIDC Trusted Publishing.
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
       - name: Install
         if: steps.check.outputs.publish == 'true'
         run: npm install
@@ -27,5 +36,3 @@ jobs:
       - name: Publish
         if: steps.check.outputs.publish == 'true'
         uses: ./.github/actions/publish
-        env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
