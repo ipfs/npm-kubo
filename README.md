@@ -24,6 +24,7 @@
 - [Usage](#usage)
 - [Development](#development)
   - [Publish a new version](#publish-a-new-version)
+    - [Authentication (npm Trusted Publishing)](#authentication-npm-trusted-publishing)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -77,47 +78,22 @@ This must point to the file, not the directory containing the file.
 
 ### Publish a new version
 
-You should be able to just run `./publish.sh` for example:
+Publishing is automated. The [`Release to npm`](./.github/workflows/main.yml) workflow runs hourly, checks `https://dist.ipfs.tech/kubo/versions` for a new release, and if one is found:
 
-```sh
-> ./publish.sh
-usage ./publish.sh <version>
-publish a version of kubo to npm
+- bumps `version` in `package.json` via `npm version`
+- publishes to npm as `kubo@<version>` with a [sigstore provenance attestation](https://docs.npmjs.com/generating-provenance-statements)
+- pushes the version commit and tag back to `master`
 
-> ./publish.sh 0.3.11
-```
+The workflow tags full kubo releases as `latest` and pre-releases (any version containing `-`, e.g. `0.41.0-rc2`) as `next`.
 
-This will:
+Maintainers can also trigger a run manually from the [Actions tab](https://github.com/ipfs/npm-kubo/actions/workflows/main.yml) via `workflow_dispatch`.
 
-- check the version is indeed a tag in https://github.com/ipfs/kubo
-- check the size of `bin/ipfs` is right (must be the checked in file)
-- update the version numbers in `package.json` and `README.md`
-- `git commit` the changes
-- push to https://github.com/ipfs/npm-kubo
-- publish to `kubo@$version` to https://npmjs.com/package/kubo
+#### Authentication (npm Trusted Publishing)
 
-Open an issue in the repo if you run into trouble.
+The workflow authenticates to npm via [Trusted Publishing](https://docs.npmjs.com/trusted-publishers) over GitHub OIDC, not a long-lived `NPM_AUTH_TOKEN`. To (re)configure trust on npmjs.com, a maintainer with publish rights should:
 
-### Publish a new version of this module with exact same kubo version
-
-If some problem happens, and you need to publish a new version of this module targetting _the same_ kubo version, then please follow this convention:
-
-1. **Clean up bad stuff:** unpublish all modules with this exact same `<kubo-version>`
-2. **Add a "hacky" version suffix:** use version: `<kubo-version>-hacky<num>`
-3. **Publish version:** publish the module. Since it's the only one with the kubo version, then it should be installed.
-
-> Why do this?
-
-Well, if you previously published npm module `kubo@0.4.0` and there was a problem, we now must publish a different version, but we want to keep the version number the same. so the strategy is to publish as `kubo@0.4.0-hacky1`, and unpublish `kubo@0.4.0`.
-
-> Why `-hacky<num>`?
-
-Because it is unlikely to be a legitimate kubo version, and we want to support kubo versions like `floodsub-1` etc.
-
-> Do i have to say `-hacky<num>` or can i just use `-<num>`?
-
-`-<num>` won't work, as [link-ipfs.js](./link-ipfs.js) expects `-hacky<num>`. If you want to
-change the convention, go for it, and update this readme accordingly.
+1. Go to the [`kubo` package settings on npmjs.com](https://www.npmjs.com/package/kubo/access) → **Trusted Publishers** → **Add trusted publisher** → **GitHub Actions**.
+2. Set organization `ipfs`, repository `npm-kubo`, workflow filename `main.yml`. Leave the environment field blank.
 
 ## Contribute
 
