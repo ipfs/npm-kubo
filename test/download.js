@@ -52,10 +52,33 @@ test('Returns an error when legacy GO_IPFS_DIST_URL is 404', async (t) => {
   t.end()
 })
 
-test('Path returns undefined when no binary has been downloaded', async (t) => {
+test('Path throws when no binary is present and autoDownload is disabled', async (t) => {
   await clean()
 
-  t.throws(detectLocation, /not found/, 'Path throws if binary is not installed')
+  t.throws(() => detectLocation({ autoDownload: false }), /not found/, 'Path throws if binary is not installed')
+
+  t.end()
+})
+
+test('Path downloads the binary on first call when it is missing', async (t) => {
+  await clean()
+
+  const binPath = detectLocation()
+  const stats = await fs.stat(binPath)
+
+  t.ok(stats, 'kubo binary was downloaded on first path() call')
+
+  t.end()
+})
+
+test('Path throws a clean error when an on-demand download fails', async (t) => {
+  await clean()
+
+  process.env.KUBO_DIST_URL = 'https://dist.ipfs.tech/notfound'
+
+  t.throws(() => detectLocation(), /not found/, 'Path throws the kubo-binary-not-found error when the download fails')
+
+  delete process.env.KUBO_DIST_URL
 
   t.end()
 })
