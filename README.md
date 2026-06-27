@@ -46,7 +46,7 @@ ipfs version v0.23.0
 
 ## Usage
 
-This module downloads Kubo (go-ipfs) binaries from https://dist.ipfs.tech into your project.
+This module downloads Kubo (go-ipfs) binaries from [GitHub releases](https://github.com/ipfs/kubo/releases) into your project.
 
 It will download the kubo version that matches the npm version of this module. So depending on `kubo@0.23.0` will install `kubo v0.23.0` for your current system architecture, in to your project at `node_modules/kubo/kubo/ipfs` and additional symlink to it at `node_modules/kubo/bin/ipfs`.
 
@@ -76,9 +76,9 @@ fetched once and reused across every project on the machine:
 - macOS: `~/Library/Caches/npm-kubo`
 - Windows: `%LOCALAPPDATA%\npm-kubo\Cache`
 
-Set `NPM_KUBO_CACHE` to an absolute path to override it. On a cache hit the
-archive is not downloaded again; two small metadata requests (`/kubo/versions`
-and the version's `dist.json`) still run to resolve the download.
+Set `NPM_KUBO_CACHE` to an absolute path to override it. On a cache hit nothing
+is fetched over the network: the download URL is derived from the version, OS,
+and architecture.
 
 #### Caching in GitHub Actions
 
@@ -113,6 +113,18 @@ warms the cache for later runs.
 If the `KUBO_BINARY` env variable is set at runtime this will override the path of the binary used.
 
 This must point to the file, not the directory containing the file.
+
+### Overriding the download source
+
+Binaries are fetched from `https://github.com/ipfs/kubo/releases`. To use a
+mirror, set `KUBO_RELEASES_URL` (or the `kubo.releasesUrl` field in your
+`package.json`) to a base that serves the same files,
+`<base>/download/<version>/<asset>`. This works with GitHub releases and any
+HTTP server that mirrors them.
+
+The old `KUBO_DIST_URL` and `GO_IPFS_DIST_URL` env vars and the `kubo.distUrl`
+config still work. They keep using the older dist.ipfs.tech layout and print a
+warning, so switch to `KUBO_RELEASES_URL` when you can.
 
 ### Installing without lifecycle scripts
 

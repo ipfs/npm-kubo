@@ -28,6 +28,8 @@ const hasha = require('hasha')
 const cproc = require('child_process')
 const isWin = process.platform === 'win32'
 
+const DEFAULT_RELEASES_URL = 'https://github.com/ipfs/kubo/releases'
+
 /**
  * avoid expensive fetch if file is already in cache
  * @param {string} url
@@ -48,14 +50,18 @@ async function cachingFetchAndVerify (url) {
   }
   if (!fs.existsSync(cachedFilePath)) {
     console.info(`Downloading ${url} to ${cacheDir}`)
-    // download file
-    fs.writeFileSync(cachedFilePath, await got(url).buffer())
+    // Fetch the archive and its checksum first, then write them. Write the
+    // checksum, then put the archive in place with a temp file and a rename, so
+    // the archive (what the cache check looks for) only shows up once it is
+    // complete. A failed download or write then leaves nothing behind, instead
+    // of an archive with no checksum that breaks every later run.
+    const archive = await got(url).buffer()
+    const checksum = await got(`${url}.sha512`).buffer()
+    fs.writeFileSync(cachedHashPath, checksum)
+    const partFile = `${cachedFilePath}.part`
+    fs.writeFileSync(partFile, archive)
+    fs.renameSync(partFile, cachedFilePath)
     console.info(`Downloaded ${url}`)
-
-    // ..and checksum
-    console.info(`Downloading ${filename}.sha512`)
-    fs.writeFileSync(cachedHashPath, await got(`${url}.sha512`).buffer())
-    console.info(`Downloaded ${filename}.sha512`)
   } else {
     console.info(`Found ${cachedFilePath}`)
   }
@@ -116,25 +122,49 @@ function cleanArguments (version, platform, arch, installPath) {
     cwd: process.env.INIT_CWD || process.cwd(),
     defaults: {
       version: 'v' + pkg.version.replace(/-[0-9]+/, ''),
-      distUrl: 'https://dist.ipfs.tech'
+      releasesUrl: DEFAULT_RELEASES_URL,
+      distUrl: ''
     }
   })
 
+  // KUBO_DIST_URL / GO_IPFS_DIST_URL / kubo.distUrl are the old dist.ipfs.tech
+  // overrides. They still work via the legacy path in download(), so pass them
+  // through here instead of rejecting them. distUrl is empty when none is set.
   return {
     version: process.env.TARGET_VERSION || version || conf.version,
     platform: process.env.TARGET_OS || platform || goenv.GOOS,
     arch: process.env.TARGET_ARCH || arch || goenv.GOARCH,
     distUrl: process.env.KUBO_DIST_URL || process.env.GO_IPFS_DIST_URL || conf.distUrl,
+    releasesUrl: process.env.KUBO_RELEASES_URL || conf.releasesUrl,
     installPath: installPath ? path.resolve(installPath) : process.cwd()
   }
 }
 
 /**
+ * Build the GitHub release asset URL. The download itself validates that the
+ * asset exists (a missing release asset returns 404), so no version index or
+ * manifest is fetched.
+ *
+ * @param {string} version
+ * @param {string} platform
+ * @param {string} arch
+ * @param {string} releasesUrl
+ */
+function getDownloadURL (version, platform, arch, releasesUrl) {
+  const base = releasesUrl.replace(/\/+$/, '')
+  const extension = platform === 'windows' ? 'zip' : 'tar.gz'
+  const asset = `kubo_${version}_${platform}-${arch}.${extension}`
+  return `${base}/download/${version}/${asset}`
+}
+
+/**
+ * Check that a version exists on a dist.ipfs.tech-style server. Used only by the
+ * deprecated KUBO_DIST_URL path.
+ *
  * @param {string} version
  * @param {string} distUrl
  */
 async function ensureVersion (version, distUrl) {
-  console.info(`${distUrl}/kubo/versions`)
   const versions = (await got(`${distUrl}/kubo/versions`).text()).trim().split('\n')
 
   if (versions.indexOf(version) === -1) {
@@ -143,12 +173,15 @@ async function ensureVersion (version, distUrl) {
 }
 
 /**
+ * Resolve the asset URL from a dist.ipfs.tech-style server (the dist.json
+ * layout). Used only by the deprecated KUBO_DIST_URL path.
+ *
  * @param {string} version
  * @param {string} platform
  * @param {string} arch
  * @param {string} distUrl
  */
-async function getDownloadURL (version, platform, arch, distUrl) {
+async function getLegacyDownloadURL (version, platform, arch, distUrl) {
   await ensureVersion(version, distUrl)
 
   const data = await got(`${distUrl}/kubo/${version}/dist.json`).json()
@@ -165,17 +198,72 @@ async function getDownloadURL (version, platform, arch, distUrl) {
   return `${distUrl}/kubo/${version}${link}`
 }
 
+let warnedDistUrlDeprecation = false
+
+// Tell the user once that the dist.ipfs.tech overrides are deprecated, and how
+// to switch to KUBO_RELEASES_URL.
+function warnDeprecatedDistUrl () {
+  if (warnedDistUrlDeprecation) {
+    return
+  }
+  warnedDistUrlDeprecation = true
+  console.error([
+    'kubo: KUBO_DIST_URL, GO_IPFS_DIST_URL and the kubo.distUrl config are deprecated.',
+    'They still work and keep using the old dist.ipfs.tech layout, but please switch',
+    'to KUBO_RELEASES_URL. It works with GitHub releases and any HTTP mirror of them.',
+    `Example: KUBO_RELEASES_URL=${DEFAULT_RELEASES_URL}`
+  ].join('\n'))
+}
+
+/**
+ * Check whether a release exists for this version, so a missing asset can be
+ * told apart from a missing release. Best effort: returns false if the check
+ * itself fails (for example a mirror with no tag page).
+ *
+ * @param {string} version
+ * @param {string} releasesUrl
+ */
+async function releaseExists (version, releasesUrl) {
+  const base = releasesUrl.replace(/\/+$/, '')
+  try {
+    await got(`${base}/tag/${version}`, { method: 'HEAD' })
+    return true
+  } catch (err) {
+    return false
+  }
+}
+
 /**
  * @param {object} options
  * @param {string} options.version
  * @param {string} options.platform
  * @param {string} options.arch
  * @param {string} options.installPath
- * @param {string} options.distUrl
+ * @param {string} [options.releasesUrl]
+ * @param {string} [options.distUrl] deprecated dist.ipfs.tech-style base
  */
-async function download ({ version, platform, arch, installPath, distUrl }) {
-  const url = await getDownloadURL(version, platform, arch, distUrl)
-  const data = await cachingFetchAndVerify(url)
+async function download ({ version, platform, arch, installPath, releasesUrl = DEFAULT_RELEASES_URL, distUrl }) {
+  let url
+  if (distUrl) {
+    warnDeprecatedDistUrl()
+    url = await getLegacyDownloadURL(version, platform, arch, distUrl)
+  } else {
+    url = getDownloadURL(version, platform, arch, releasesUrl)
+  }
+
+  let data
+  try {
+    data = await cachingFetchAndVerify(url)
+  } catch (err) {
+    const e = /** @type {{ response?: { statusCode?: number } }} */ (err)
+    if (e.response && e.response.statusCode === 404 && !distUrl) {
+      if (await releaseExists(version, releasesUrl)) {
+        throw new Error(`kubo ${version} is released, but it has no ${platform}-${arch} file. Your platform may be unsupported, or the release may still be publishing. If this is a new version, wait a few hours and try again. (${url})`)
+      }
+      throw new Error(`kubo ${version} is not available: there is no ${version} release. (${url})`)
+    }
+    throw err
+  }
 
   await unpack(url, installPath, data)
   console.info(`Unpacked ${installPath}`)
@@ -255,14 +343,6 @@ async function link ({ depBin, version }) {
   return localBin
 }
 
-/**
-* @param {object} options
-* @param {string} options.version
-* @param {string} options.platform
-* @param {string} options.arch
-* @param {string} options.installPath
-* @param {string} options.distUrl
-*/
 module.exports.download = download
 
 /**
