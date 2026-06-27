@@ -92,10 +92,13 @@ env:
   NPM_KUBO_CACHE: ${{ github.workspace }}/.kubo-cache
 steps:
   - uses: actions/checkout@v4
+  # read the pinned kubo version so the cache key follows it, no manual bump
+  - id: kubo
+    run: echo "version=$(jq -r '.packages["node_modules/kubo"].version' package-lock.json)" >> "$GITHUB_OUTPUT"
   - uses: actions/cache@v4
     with:
       path: ${{ github.workspace }}/.kubo-cache
-      key: ${{ runner.os }}-${{ runner.arch }}-kubo-0.42.0   # bump on kubo upgrade
+      key: ${{ runner.os }}-${{ runner.arch }}-kubo-${{ steps.kubo.outputs.version }}
       restore-keys: ${{ runner.os }}-${{ runner.arch }}-kubo-
   - uses: actions/setup-node@v4
     with: { node-version: 24, cache: npm }
