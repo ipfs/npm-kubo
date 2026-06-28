@@ -294,6 +294,10 @@ async function link ({ depBin, version }) {
     fs.unlinkSync(localBin)
   }
 
+  // Make sure the bin directory exists. For git installs npm runs postinstall
+  // before it is created, so the symlink below would otherwise fail with ENOENT.
+  fs.mkdirSync(path.dirname(localBin), { recursive: true })
+
   console.info('Linking', depBin, 'to', localBin)
   try {
     fs.symlinkSync(depBin, localBin)
