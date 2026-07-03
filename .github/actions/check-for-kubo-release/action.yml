@@ -1,7 +1,17 @@
 name: 'Check for kubo release'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
+description: 'Find the latest ipfs/kubo GitHub release and decide whether npm-kubo should publish it'
 outputs:
   publish:
     description: 'Whether to publish a new version'
+    value: ${{ steps.check.outputs.publish }}
+  version:
+    description: 'The kubo release version to publish, without the leading v (set when publish is true)'
+    value: ${{ steps.check.outputs.version }}
+runs:
+  using: 'composite'
+  steps:
+    - id: check
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: ${{ github.action_path }}/entrypoint.sh

@@ -1,7 +1,13 @@
 name: 'Publish release'
 description: 'Bump version, publish to npm with provenance via Trusted Publishing, and push changes back to origin'
+inputs:
+  version:
+    description: 'The kubo version to publish, without the leading v (e.g. 0.42.0)'
+    required: true
 runs:
   using: 'composite'
   steps:
     - shell: bash
+      env:
+        KUBO_VERSION: ${{ inputs.version }}
       run: ${{ github.action_path }}/entrypoint.sh

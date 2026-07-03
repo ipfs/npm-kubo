@@ -153,7 +153,7 @@ better safe than sorry.
 
 ### Publish a new version
 
-Publishing is automated. The [`Release to npm`](./.github/workflows/main.yml) workflow runs hourly, checks `https://dist.ipfs.tech/kubo/versions` for a new release, and if one is found:
+Publishing is automated. The [`Release to npm`](./.github/workflows/main.yml) workflow runs hourly and checks the latest [ipfs/kubo release](https://github.com/ipfs/kubo/releases). It only proceeds once that release has every binary npm-kubo serves attached, so a kubo version that is tagged but still uploading its release assets is skipped and picked up on a later run. When a complete release is found, it:
 
 - bumps `version` in `package.json` via `npm version`
 - publishes to npm as `kubo@<version>` with a [sigstore provenance attestation](https://docs.npmjs.com/generating-provenance-statements)

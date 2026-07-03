@@ -1,16 +1,10 @@
 #!/usr/bin/env bash
-set -eu
+set -euo pipefail
 
-# Current version in package.json (e.g. "0.4.20")
+# Version resolved by the check-for-kubo-release action, e.g. "0.42.0".
+LATEST="$KUBO_VERSION"
+# Current version in package.json (e.g. "0.4.20").
 CURRENT=$(node -e 'console.log(require("./package.json").version)')
-# Latest version on dist.ipfs.tech (e.g. "0.4.21")
-LATEST=$(curl --silent --show-error --fail https://dist.ipfs.tech/kubo/versions | tail -n 1 | cut -c 2-)
-
-# Verify $LATEST is valid semver
-if ! npx semver "$LATEST"; then
-  echo "⚠️  Ignoring version $LATEST - Invalid SemVer string"
-  exit 1
-fi
 
 if [[ "$CURRENT" == "$LATEST" ]]; then
   echo "💤 $CURRENT is already the latest release. Nothing to do."

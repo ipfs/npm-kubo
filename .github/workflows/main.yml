@@ -36,3 +36,5 @@ jobs:
       - name: Publish
         if: steps.check.outputs.publish == 'true'
         uses: ./.github/actions/publish
+        with:
+          version: ${{ steps.check.outputs.version }}
