@@ -51,7 +51,7 @@
     "tap-spec": "^5.0.0",
     "tape": "^4.13.2",
     "tape-promise": "^4.0.0",
-    "typescript": "^4.3.5"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "cachedir": "^2.3.0",
