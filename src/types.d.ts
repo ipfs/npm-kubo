@@ -1,1 +1,1 @@
-export function path(): string
+export function path(options?: { autoDownload?: boolean }): string
